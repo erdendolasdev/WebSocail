@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nexo — Sosyal Paylaşım</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#" aria-label="Nexo ana sayfa"><span class="brand-mark">n</span><span>nexo</span></a>
+    <nav class="main-nav" aria-label="Ana menü">
+      <button class="nav-item active" data-view="home" type="button"><span class="nav-icon" data-icon="home"></span><span>Ana Sayfa</span></button>
+      <button class="nav-item" data-view="explore" type="button"><span class="nav-icon" data-icon="compass"></span><span>Keşfet</span></button>
+      <button class="nav-item" data-view="messages" type="button"><span class="nav-icon" data-icon="message"></span><span>Mesajlar</span></button>
+      <button class="nav-item" data-view="notifications" type="button"><span class="nav-icon" data-icon="bell"></span><span>Bildirimler</span></button>
+      <button class="nav-item" data-view="profile" type="button"><span class="nav-icon" data-icon="user"></span><span>Profil</span></button>
+    </nav>
+    <button class="new-post-btn" id="newPostBtn" type="button"><span data-icon="plus"></span><span>Yeni Gönderi</span></button>
+    <div class="sidebar-profile">
+      <button class="sidebar-profile-trigger" id="sidebarProfileTrigger" type="button" aria-label="Profilimi aç">
+        <span class="avatar-placeholder" id="sidebarAvatar" aria-hidden="true"><span id="sidebarInitials">?</span><img id="sidebarAvatarImage" alt="" hidden></span>
+        <span class="sidebar-profile-copy"><strong id="sidebarName">Misafir</strong><span id="sidebarHandle">Giriş yapılmadı</span></span>
+      </button>
+      <button class="icon-button" id="authMenuButton" aria-label="Giriş veya kayıt" data-icon="dots" type="button"></button>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <header class="topbar">
+      <div class="topbar-actions">
+        <label class="search"><span data-icon="search"></span><input type="search" placeholder="Ara..." id="searchInput"><kbd>⌘ K</kbd></label>
+        <div class="guest-actions" id="guestActions">
+          <button class="topbar-login" id="topbarLogin" type="button">Giriş yap</button>
+          <button class="topbar-register" id="topbarRegister" type="button">Kayıt ol</button>
+        </div>
+        <button class="topbar-logout" id="topbarLogout" type="button" hidden>Çıkış yap</button>
+      </div>
+    </header>
+
+    <div class="content-grid" id="homeView">
+      <section class="feed" aria-label="Ana akış">
+        <div class="stories-card">
+          <div class="stories-header"><h2>Hikayeler</h2></div>
+          <div class="stories" id="stories">
+            <button class="story" type="button" aria-label="Hikayeni ekle">
+              <span class="story-ring own"><span class="story-avatar-placeholder" id="storyAvatar"><span id="storyInitials">?</span><img id="storyAvatarImage" alt="" hidden></span><span class="story-add">+</span></span>
+              <span class="story-name">Hikayen</span>
+            </button>
+          </div>
+        </div>
+        <article class="composer">
+          <div class="avatar-placeholder" id="composerAvatar" aria-hidden="true"><span id="composerInitials">?</span><img id="composerAvatarImage" alt="" hidden></div>
+          <button class="composer-input" id="composerInput" type="button">Neler paylaşmak istiyorsun?</button>
+          <div class="composer-actions">
+            <button id="composerImageButton" type="button"><span data-icon="image"></span> Fotoğraf</button>
+            <button id="composerVideoButton" type="button"><span data-icon="video"></span> Video</button>
+            <button type="button"><span data-icon="smile"></span> Duygu</button>
+          </div>
+        </article>
+        <div id="feedPosts" class="empty-feed">
+          <div class="empty-icon" data-icon="compass"></div>
+          <h2>Henüz gönderi yok</h2>
+          <p>İlk gönderini paylaşarak akışını başlatabilirsin.</p>
+          <button type="button" id="emptyPostBtn">Gönderi oluştur</button>
+        </div>
+      </section>
+
+      <aside class="right-column">
+        <section class="side-card tag-card">
+          <div class="side-card-header"><h2>Etiketler</h2></div>
+          <div class="tag-tabs" role="tablist" aria-label="Etiket sıralaması">
+            <button class="tag-tab active" type="button" role="tab" aria-selected="true" data-tag-mode="popular">Popüler</button>
+            <button class="tag-tab" type="button" role="tab" aria-selected="false" data-tag-mode="new">Yeni</button>
+          </div>
+          <div class="tag-list" id="trendingTags" aria-live="polite">
+            <p class="tag-empty">Etiketler yükleniyor...</p>
+          </div>
+        </section>
+        <section class="side-card">
+          <div class="side-card-header"><h2>Önerilen kişiler</h2></div>
+          <div id="suggestions" class="side-empty">Öneri bulunmuyor.</div>
+        </section>
+        <footer class="footer-links"><a href="#">Hakkımızda</a><a href="#">Gizlilik</a><a href="#">Yardım</a><a href="#">Koşullar</a><span>© 2026 nexo</span></footer>
+      </aside>
+    </div>
+
+    <section class="explore-view" id="exploreView" hidden>
+      <header class="explore-heading">
+        <div><p>KEŞFET</p><h2>Yeni içerikler keşfet</h2></div>
+        <span>Metin, görsel ve videolar</span>
+      </header>
+      <div class="explore-tabs" role="tablist" aria-label="Keşfet gönderi türü">
+        <button class="explore-tab active" type="button" role="tab" aria-selected="true" data-explore-filter="all">Tümü</button>
+        <button class="explore-tab" type="button" role="tab" aria-selected="false" data-explore-filter="text">Metin</button>
+        <button class="explore-tab" type="button" role="tab" aria-selected="false" data-explore-filter="image">Görseller</button>
+        <button class="explore-tab" type="button" role="tab" aria-selected="false" data-explore-filter="video">Videolar</button>
+      </div>
+      <div id="explorePosts" class="explore-posts">
+        <div class="profile-empty"><strong>İçerikler yükleniyor...</strong></div>
+      </div>
+    </section>
+
+    <section class="profile-view" id="profileView" hidden>
+      <div class="profile-column">
+        <section class="profile-card">
+          <div class="profile-cover" id="profileCover">
+            <img id="profileCoverImage" alt="" hidden>
+          </div>
+          <div class="profile-card-heading">
+            <div class="profile-avatar" id="profileAvatar">
+              <span id="profileInitials">?</span>
+              <img id="profileAvatarImage" alt="" hidden>
+            </div>
+            <div class="profile-info">
+              <span class="profile-kicker">NEXO ÜYESİ</span>
+              <h2 id="profileName">Misafir</h2>
+              <span id="profileHandle">@kullaniciadi</span>
+            </div>
+          </div>
+          <p class="profile-bio" id="profileBio">Kişisel profil alanı.</p>
+          <button class="profile-action" id="profileAction" type="button">Profil</button>
+        </section>
+        <section class="profile-stats" aria-label="Profil istatistikleri">
+          <div class="profile-stat"><span>Paylaşım</span><strong id="profilePostCount">0</strong></div>
+          <div class="profile-stat"><span>Takipçi</span><strong id="profileFollowerCount">0</strong></div>
+          <div class="profile-stat"><span>Takip</span><strong id="profileFollowingCount">0</strong></div>
+        </section>
+      </div>
+      <section class="profile-feed-panel">
+        <div class="profile-section-heading">
+          <div><h3 id="profileContentTitle">Paylaşımlar</h3><p id="profileContentDescription">Bu profilde paylaşılan gönderiler</p></div>
+        </div>
+        <div class="profile-tabs" role="tablist" aria-label="Profil gönderileri">
+          <button class="profile-tab active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">Paylaşımlar</button>
+          <button class="profile-tab" type="button" role="tab" aria-selected="false" data-profile-tab="likes">Beğeniler</button>
+          <button class="profile-tab" type="button" role="tab" aria-selected="false" data-profile-tab="reposts">Tekrar gönderiler</button>
+        </div>
+        <div class="profile-media-tabs" id="profileMediaFilters" role="tablist" aria-label="Profil medya türü" hidden>
+          <button class="profile-media-tab active" type="button" role="tab" aria-selected="true" data-profile-media="all">Tümü</button>
+          <button class="profile-media-tab" type="button" role="tab" aria-selected="false" data-profile-media="text">Metin</button>
+          <button class="profile-media-tab" type="button" role="tab" aria-selected="false" data-profile-media="image">Görseller</button>
+          <button class="profile-media-tab" type="button" role="tab" aria-selected="false" data-profile-media="video">Videolar</button>
+        </div>
+        <div id="profilePosts" class="profile-posts">
+          <div class="profile-empty">
+            <strong>Henüz paylaşım yok</strong>
+            <p>Paylaşılan gönderiler burada görünecek.</p>
+          </div>
+        </div>
+      </section>
+      <p class="profile-error" id="profileError" role="status"></p>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="postModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header"><h2 id="modalTitle">Yeni gönderi oluştur</h2><button class="modal-close" id="modalClose" aria-label="Kapat">×</button></div>
+      <textarea id="postText" placeholder="Toplulukla ne paylaşmak istiyorsun?" maxlength="280"></textarea>
+      <div class="post-attachment">
+        <input id="postMediaInput" type="file" accept=".jpg,.jpeg,.png,.webp,.mp4,.webm,image/jpeg,image/png,image/webp,video/mp4,video/webm" hidden>
+        <button class="post-media-button" id="postMediaButton" type="button"><span data-icon="image"></span>Görsel veya video ekle</button>
+        <span class="post-media-name" id="postMediaName"></span>
+        <button class="post-media-clear" id="postMediaClear" type="button" aria-label="Medya dosyasını kaldır" hidden>×</button>
+      </div>
+      <div class="modal-footer"><span id="charCount">0 / 280</span><button class="publish-btn" id="publishBtn">Paylaş</button></div>
+    </div>
+  </div>
+
+  <div class="media-viewer-backdrop" id="mediaViewer" aria-hidden="true">
+    <section class="media-viewer" role="dialog" aria-modal="true" aria-label="Medya görüntüleyici" tabindex="-1">
+      <button class="media-viewer-close" id="mediaViewerClose" type="button" aria-label="Görüntüyü kapat">×</button>
+      <img class="media-viewer-image" alt="" hidden>
+      <video class="media-viewer-video" controls playsinline hidden></video>
+    </section>
+  </div>
+
+  <div class="modal-backdrop auth-backdrop" id="registerModal" aria-hidden="true">
+    <section class="auth-card" role="dialog" aria-modal="true" aria-labelledby="registerTitle">
+      <button class="auth-close" id="registerClose" aria-label="Kapat" type="button">×</button>
+      <div class="auth-brand"><span class="brand-mark">n</span><strong>nexo</strong></div>
+      <h2 id="registerTitle">Hesap oluştur</h2>
+      <p class="auth-subtitle">Yeni hesabını oluşturarak topluluğa katıl.</p>
+      <form id="registerForm" class="auth-form">
+        <label>Ad Soyad<input name="name" autocomplete="name" placeholder="Örn. Ada Kaya" minlength="2" required></label>
+        <label>Kullanıcı adı<input name="username" autocomplete="username" placeholder="Örn. adakaya" minlength="3" maxlength="20" pattern="[A-Za-z0-9_.]+" required></label>
+        <label>Şifre<input name="password" type="password" autocomplete="new-password" placeholder="En az 6 karakter" minlength="6" required></label>
+        <p class="auth-error" id="registerError"></p>
+        <button class="auth-submit" type="submit">Kayıt ol</button>
+      </form>
+      <p class="auth-switch">Zaten hesabın var mı? <button id="openLoginFromRegister" type="button">Giriş yap</button></p>
+    </section>
+  </div>
+
+  <div class="modal-backdrop auth-backdrop" id="loginModal" aria-hidden="true">
+    <section class="auth-card" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <button class="auth-close" id="loginClose" aria-label="Kapat" type="button">×</button>
+      <div class="auth-brand"><span class="brand-mark">n</span><strong>nexo</strong></div>
+      <h2 id="loginTitle">Tekrar hoş geldin</h2>
+      <p class="auth-subtitle">Kullanıcı bilgilerinle oturum aç.</p>
+      <form id="loginForm" class="auth-form">
+        <label>Kullanıcı adı<input name="username" autocomplete="username" placeholder="kullaniciadi" required></label>
+        <label>Şifre<input name="password" type="password" autocomplete="current-password" placeholder="Şifren" required></label>
+        <p class="auth-error" id="loginError"></p>
+        <button class="auth-submit" type="submit">Giriş yap</button>
+      </form>
+      <p class="auth-switch">Hesabın yok mu? <button id="openRegisterFromLogin" type="button">Kayıt ol</button></p>
+    </section>
+  </div>
+
+  <div class="modal-backdrop auth-backdrop" id="profileEditModal" aria-hidden="true">
+    <section class="auth-card profile-edit-card" role="dialog" aria-modal="true" aria-labelledby="profileEditTitle">
+      <button class="auth-close" id="profileEditClose" aria-label="Kapat" type="button"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+      <div class="profile-edit-heading">
+        <span class="profile-edit-heading-icon" aria-hidden="true"><i class="fa-solid fa-user-pen"></i></span>
+        <div><span class="profile-edit-eyebrow">HESAP AYARLARI</span><h2 id="profileEditTitle">Profili düzenle</h2></div>
+      </div>
+      <p class="auth-subtitle">Profil bilgilerini ve görsellerini güncelle.</p>
+      <form id="profileEditForm" class="auth-form">
+        <label class="profile-edit-field">
+          <span class="profile-field-heading"><i class="fa-solid fa-user" aria-hidden="true"></i>Ad Soyad</span>
+          <input name="name" id="editProfileName" minlength="2" required>
+        </label>
+        <label class="profile-edit-field">
+          <span class="profile-field-heading"><i class="fa-solid fa-align-left" aria-hidden="true"></i>Hakkında</span>
+          <span class="profile-bio-wrap">
+            <textarea name="bio" id="editProfileBio" maxlength="160" rows="3" placeholder="Kendinden kısaca bahset"></textarea>
+            <span class="profile-bio-count" id="profileBioCount">0 / 160</span>
+          </span>
+        </label>
+        <div class="profile-upload-heading"><strong>Fotoğraflar</strong><span>İsteğe bağlı</span></div>
+        <div class="profile-upload-grid">
+          <label class="profile-upload-card" for="editProfileAvatar">
+            <span class="profile-upload-icon" aria-hidden="true"><i class="fa-solid fa-user"></i></span>
+            <span class="profile-upload-copy"><strong>Profil fotoğrafı</strong><small id="profileAvatarFileName">JPG, PNG veya WEBP · 5 MB</small></span>
+            <span class="profile-upload-action"><i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>Seç</span>
+            <input class="profile-upload-input" id="editProfileAvatar" name="avatar" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+          </label>
+          <label class="profile-upload-card" for="editProfileCover">
+            <span class="profile-upload-icon" aria-hidden="true"><i class="fa-regular fa-image"></i></span>
+            <span class="profile-upload-copy"><strong>Kapak görseli</strong><small id="profileCoverFileName">JPG, PNG veya WEBP · 5 MB</small></span>
+            <span class="profile-upload-action"><i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>Seç</span>
+            <input class="profile-upload-input" id="editProfileCover" name="cover" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+          </label>
+        </div>
+        <p class="auth-error" id="profileEditError"></p>
+        <button class="auth-submit profile-edit-submit" type="submit"><i class="fa-solid fa-check" aria-hidden="true"></i>Değişiklikleri kaydet</button>
+      </form>
+    </section>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Mobil menü">
+    <button class="active" data-icon="home" data-view="home" aria-label="Ana sayfa"></button>
+    <button data-icon="compass" data-view="explore" aria-label="Keşfet"></button>
+    <button class="mobile-create" id="mobileCreate" data-icon="plus" aria-label="Yeni gönderi"></button>
+    <button data-icon="bell" aria-label="Bildirimler"></button>
+    <button data-icon="user" data-view="profile" aria-label="Profil"></button>
+  </nav>
+  <script src="script.js"></script>
+</body>
+</html>
